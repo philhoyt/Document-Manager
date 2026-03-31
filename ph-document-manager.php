@@ -20,6 +20,16 @@ define( 'PH_DOCUMENT_MANAGER_URL', plugin_dir_url( __FILE__ ) );
 
 require_once PH_DOCUMENT_MANAGER_DIR . 'vendor/autoload.php';
 
+// Plugin update checker — GitHub releases.
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$ph_document_manager_update_checker = PucFactory::buildUpdateChecker(
+	'https://github.com/philhoyt/ph-document-manager/',
+	__FILE__,
+	'ph-document-manager'
+);
+$ph_document_manager_update_checker->getVcsApi()->enableReleaseAssets();
+
 // Activation / deactivation hooks.
 register_activation_hook( __FILE__, 'ph_document_manager_activate' );
 register_deactivation_hook( __FILE__, 'ph_document_manager_deactivate' );
