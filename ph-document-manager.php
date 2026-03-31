@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Document Manager
- * Plugin URI:  https://github.com/philhoyt/ph-document-manager
+ * Plugin URI:  https://github.com/philhoyt/Document-Manager
  * Description: Manage files and URLs as stable permalink redirects discoverable via the core link picker.
  * Version:     1.0.0
  * Author:      Phil Hoyt
@@ -24,7 +24,7 @@ require_once PH_DOCUMENT_MANAGER_DIR . 'vendor/autoload.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $ph_document_manager_update_checker = PucFactory::buildUpdateChecker(
-	'https://github.com/philhoyt/ph-document-manager/',
+	'https://github.com/philhoyt/Document-Manager',
 	__FILE__,
 	'ph-document-manager'
 );
