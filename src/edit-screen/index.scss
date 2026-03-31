@@ -1,0 +1,120 @@
+// Edit screen styles for Document Manager.
+
+// Source type toggle
+.ph-doc-source-toggle {
+	margin: 12px 0 4px;
+
+	fieldset {
+		border: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	label {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin-right: 24px;
+		font-weight: 600;
+		font-size: 13px;
+		cursor: pointer;
+	}
+
+	input[type="radio"] {
+		cursor: pointer;
+	}
+}
+
+// File meta box
+.ph-doc-file-meta-box {
+	padding: 4px 0;
+}
+
+.ph-doc-file-info {
+	margin-bottom: 10px;
+	font-size: 13px;
+
+	.ph-doc-file-name {
+		font-weight: 600;
+	}
+
+	.ph-doc-file-size,
+	.ph-doc-file-date {
+		color: #646970;
+		margin-left: 8px;
+
+		&::before {
+			content: "·";
+			margin-right: 8px;
+		}
+	}
+
+	.ph-doc-no-file {
+		color: #646970;
+		font-style: italic;
+	}
+}
+
+.ph-doc-remove-link {
+	margin-left: 12px;
+	color: #b32d2e;
+	text-decoration: underline;
+	cursor: pointer;
+
+	&:hover {
+		color: #8a2122;
+	}
+}
+
+// URL meta box
+.ph-doc-url-meta-box {
+	padding: 4px 0;
+
+	input[type="url"] {
+		width: 100%;
+		max-width: 600px;
+	}
+}
+
+// Required note
+.ph-doc-required-note {
+	color: #646970;
+	margin-top: 6px;
+
+	&::before {
+		content: "* ";
+		color: #d63638;
+	}
+}
+
+// Permalink/copy link meta box
+.ph-doc-permalink-link {
+	display: block;
+	word-break: break-all;
+	font-size: 12px;
+	margin-bottom: 8px;
+}
+
+// Revision history table
+.ph-doc-revisions-table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 13px;
+
+	th,
+	td {
+		padding: 8px 10px;
+		vertical-align: middle;
+		border-bottom: 1px solid #dcdcde;
+	}
+
+	th {
+		font-weight: 600;
+		background: #f6f7f7;
+	}
+
+	.ph-doc-missing {
+		color: #646970;
+		font-style: italic;
+	}
+}

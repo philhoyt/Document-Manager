@@ -1,0 +1,17 @@
+{
+    "name": "philhoyt/ph-document-manager",
+    "description": "Document Manager WordPress plugin",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "classmap": [
+            "includes/"
+        ]
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
