@@ -5,31 +5,29 @@
 import { speak } from '@wordpress/a11y';
 
 export function initCopyLink() {
-	const btn = document.getElementById( 'ph-doc-copy-link' );
-	if ( ! btn ) {
+	const btn = document.getElementById('ph-doc-copy-link');
+	if (!btn) {
 		return;
 	}
 
 	const url = btn.dataset.url;
-	if ( ! url ) {
+	if (!url) {
 		return;
 	}
 
 	const originalText = btn.textContent;
 	const copiedText = window.phDocumentManager?.copiedText || 'Copied!';
 
-	btn.addEventListener( 'click', () => {
-		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+	btn.addEventListener('click', () => {
+		if (navigator.clipboard && navigator.clipboard.writeText) {
 			navigator.clipboard
-				.writeText( url )
-				.then( () => showCopied( btn, copiedText, originalText ) )
-				.catch( () =>
-					fallbackCopy( url, btn, copiedText, originalText )
-				);
+				.writeText(url)
+				.then(() => showCopied(btn, copiedText, originalText))
+				.catch(() => fallbackCopy(url, btn, copiedText, originalText));
 		} else {
-			fallbackCopy( url, btn, copiedText, originalText );
+			fallbackCopy(url, btn, copiedText, originalText);
 		}
-	} );
+	});
 }
 
 /**
@@ -39,13 +37,13 @@ export function initCopyLink() {
  * @param {string}      copiedText
  * @param {string}      originalText
  */
-function showCopied( btn, copiedText, originalText ) {
+function showCopied(btn, copiedText, originalText) {
 	btn.textContent = copiedText;
 	// The label change is visual only; announce it for screen reader users.
-	speak( copiedText, 'polite' );
-	setTimeout( () => {
+	speak(copiedText, 'polite');
+	setTimeout(() => {
 		btn.textContent = originalText;
-	}, 2000 );
+	}, 2000);
 }
 
 /**
@@ -56,21 +54,21 @@ function showCopied( btn, copiedText, originalText ) {
  * @param {string}      copiedText
  * @param {string}      originalText
  */
-function fallbackCopy( url, btn, copiedText, originalText ) {
-	const textarea = document.createElement( 'textarea' );
+function fallbackCopy(url, btn, copiedText, originalText) {
+	const textarea = document.createElement('textarea');
 	textarea.value = url;
 	textarea.style.position = 'fixed';
 	textarea.style.opacity = '0';
-	document.body.appendChild( textarea );
+	document.body.appendChild(textarea);
 	textarea.focus();
 	textarea.select();
 
 	try {
-		document.execCommand( 'copy' );
-		showCopied( btn, copiedText, originalText );
-	} catch ( err ) {
+		document.execCommand('copy');
+		showCopied(btn, copiedText, originalText);
+	} catch {
 		// Silent fail — the URL is already visible on screen.
 	} finally {
-		document.body.removeChild( textarea );
+		document.body.removeChild(textarea);
 	}
 }
