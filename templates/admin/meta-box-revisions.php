@@ -63,15 +63,25 @@ if ( empty( $revisions ) ) : ?>
 						?>
 					</td>
 					<td>
-						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-							<input type="hidden" name="action" value="ph_document_restore_revision" />
-							<input type="hidden" name="post_id" value="<?php echo esc_attr( $post_id ); ?>" />
-							<input type="hidden" name="revision_index" value="<?php echo esc_attr( $index ); ?>" />
-							<?php wp_nonce_field( 'ph_document_restore_revision', 'ph_restore_nonce' ); ?>
-							<button type="submit" class="button button-small">
-								<?php esc_html_e( 'Restore', 'ph-document-manager' ); ?>
-							</button>
-						</form>
+						<?php
+						// A nonced GET link, not a form: the meta box renders inside the
+						// core post form and nested <form> elements are dropped by the
+						// HTML parser, which would hijack the post form's own submission.
+						$restore_url = wp_nonce_url(
+							add_query_arg(
+								array(
+									'action'         => 'ph_document_restore_revision',
+									'post_id'        => $post_id,
+									'revision_index' => $index,
+								),
+								admin_url( 'admin-post.php' )
+							),
+							'ph_document_restore_revision_' . $post_id . '_' . $index
+						);
+						?>
+						<a href="<?php echo esc_url( $restore_url ); ?>" class="button button-small">
+							<?php esc_html_e( 'Restore', 'ph-document-manager' ); ?>
+						</a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

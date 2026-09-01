@@ -106,17 +106,16 @@ class Validation {
 	 * Handle the restore revision admin-post action.
 	 */
 	public function handle_restore_revision() {
-		if (
-			! isset( $_POST['ph_restore_nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ph_restore_nonce'] ) ), 'ph_document_restore_revision' )
-		) {
-			wp_die( esc_html__( 'Security check failed.', 'ph-document-manager' ) );
+		$post_id        = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+		$revision_index = isset( $_GET['revision_index'] ) ? absint( $_GET['revision_index'] ) : 0;
+
+		check_admin_referer( 'ph_document_restore_revision_' . $post_id . '_' . $revision_index );
+
+		if ( ! $post_id || 'ph_document' !== get_post_type( $post_id ) ) {
+			wp_die( esc_html__( 'That document could not be found.', 'ph-document-manager' ) );
 		}
 
-		$post_id        = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
-		$revision_index = isset( $_POST['revision_index'] ) ? absint( $_POST['revision_index'] ) : 0;
-
-		if ( ! $post_id || ! current_user_can( 'manage_ph_documents' ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_die( esc_html__( 'You do not have permission to do this.', 'ph-document-manager' ) );
 		}
 
@@ -124,8 +123,8 @@ class Validation {
 
 		$redirect = add_query_arg(
 			array(
-				'post'           => $post_id,
-				'action'         => 'edit',
+				'post'            => $post_id,
+				'action'          => 'edit',
 				'ph_doc_restored' => $success ? '1' : '0',
 			),
 			admin_url( 'post.php' )
