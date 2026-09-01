@@ -6,40 +6,40 @@
 import { speak } from '@wordpress/a11y';
 
 export function initMediaPicker() {
-	const selectBtn = document.getElementById( 'ph-doc-select-file' );
-	const fileIdInput = document.getElementById( 'ph-doc-file-id' );
-	const fileInfo = document.getElementById( 'ph-doc-file-info' );
+	const selectBtn = document.getElementById('ph-doc-select-file');
+	const fileIdInput = document.getElementById('ph-doc-file-id');
+	const fileInfo = document.getElementById('ph-doc-file-info');
 
-	if ( ! selectBtn || ! fileIdInput || ! fileInfo ) {
+	if (!selectBtn || !fileIdInput || !fileInfo) {
 		return;
 	}
 
-	if ( ! window.wp || ! window.wp.media ) {
+	if (!window.wp || !window.wp.media) {
 		return;
 	}
 
 	let frame;
 
 	// Handle remove button if it exists in the DOM.
-	document.addEventListener( 'click', ( e ) => {
-		if ( e.target && e.target.id === 'ph-doc-remove-file' ) {
+	document.addEventListener('click', (e) => {
+		if (e.target && e.target.id === 'ph-doc-remove-file') {
 			fileIdInput.value = '0';
 			fileInfo.className = 'ph-doc-file-info';
 			const noFileText =
 				window.phDocumentManager?.noFileText || 'No file selected.';
 			fileInfo.innerHTML =
 				'<span class="ph-doc-no-file">' + noFileText + '</span>';
-			speak( noFileText, 'polite' );
+			speak(noFileText, 'polite');
 		}
-	} );
+	});
 
-	selectBtn.addEventListener( 'click', () => {
-		if ( frame ) {
+	selectBtn.addEventListener('click', () => {
+		if (frame) {
 			frame.open();
 			return;
 		}
 
-		frame = window.wp.media( {
+		frame = window.wp.media({
 			title:
 				window.phDocumentManager?.mediaTitle ||
 				'Select or Upload Document',
@@ -47,14 +47,10 @@ export function initMediaPicker() {
 				text: window.phDocumentManager?.mediaButton || 'Use This File',
 			},
 			multiple: false,
-		} );
+		});
 
-		frame.on( 'select', () => {
-			const attachment = frame
-				.state()
-				.get( 'selection' )
-				.first()
-				.toJSON();
+		frame.on('select', () => {
+			const attachment = frame.state().get('selection').first().toJSON();
 
 			fileIdInput.value = attachment.id;
 
@@ -62,22 +58,22 @@ export function initMediaPicker() {
 			const fileSize = attachment.filesizeHumanReadable || '';
 			const fileDate = attachment.dateFormatted || '';
 
-			let html = `<span class="ph-doc-file-name">${ escapeHtml(
+			let html = `<span class="ph-doc-file-name">${escapeHtml(
 				fileName
-			) }</span>`;
-			if ( fileSize ) {
-				html += ` <span class="ph-doc-file-size">${ escapeHtml(
+			)}</span>`;
+			if (fileSize) {
+				html += ` <span class="ph-doc-file-size">${escapeHtml(
 					fileSize
-				) }</span>`;
+				)}</span>`;
 			}
-			if ( fileDate ) {
-				html += ` <span class="ph-doc-file-date">${ escapeHtml(
+			if (fileDate) {
+				html += ` <span class="ph-doc-file-date">${escapeHtml(
 					fileDate
-				) }</span>`;
+				)}</span>`;
 			}
-			html += ` <button type="button" id="ph-doc-remove-file" class="button-link ph-doc-remove-link">${ escapeHtml(
+			html += ` <button type="button" id="ph-doc-remove-file" class="button-link ph-doc-remove-link">${escapeHtml(
 				window.phDocumentManager?.removeText || 'Remove'
-			) }</button>`;
+			)}</button>`;
 
 			fileInfo.className = 'ph-doc-file-info has-file';
 			fileInfo.innerHTML = html;
@@ -85,16 +81,16 @@ export function initMediaPicker() {
 			// The info block is rewritten in place, which screen readers do not
 			// announce on their own.
 			speak(
-				( window.phDocumentManager?.fileSelectedText ||
-					'File selected:' ) +
+				(window.phDocumentManager?.fileSelectedText ||
+					'File selected:') +
 					' ' +
 					fileName,
 				'polite'
 			);
-		} );
+		});
 
 		frame.open();
-	} );
+	});
 }
 
 /**
@@ -103,10 +99,10 @@ export function initMediaPicker() {
  * @param {string} str Untrusted string to escape.
  * @return {string} The string with HTML-significant characters escaped.
  */
-function escapeHtml( str ) {
-	return String( str )
-		.replace( /&/g, '&amp;' )
-		.replace( /</g, '&lt;' )
-		.replace( />/g, '&gt;' )
-		.replace( /"/g, '&quot;' );
+function escapeHtml(str) {
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;');
 }
