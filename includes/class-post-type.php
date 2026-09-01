@@ -44,19 +44,26 @@ class Post_Type {
 		);
 
 		$args = array(
-			'labels'             => $labels,
-			'public'             => false,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => true,
-			'show_in_rest'       => true,
-			'query_var'          => true,
-			'rewrite'            => array(
+			'labels'                => $labels,
+			// Public so the core link picker can discover documents: both
+			// wp_link_query() and the REST search handler only consider post
+			// types registered with 'public' => true. exclude_from_search keeps
+			// documents out of front-end site search, and Rest_Documents_Controller
+			// plus Rest::filter_search_query() keep them out of anonymous REST.
+			'public'                => true,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => true,
+			'show_ui'               => true,
+			'show_in_menu'          => true,
+			'show_in_rest'          => true,
+			'rest_controller_class' => Rest_Documents_Controller::class,
+			'query_var'             => true,
+			'rewrite'               => array(
 				'slug'  => sanitize_title( $slug ),
 				'feeds' => false,
 			),
-			'capability_type'    => 'post',
-			'capabilities'       => array(
+			'capability_type'       => 'post',
+			'capabilities'          => array(
 				'edit_post'          => 'manage_ph_documents',
 				'read_post'          => 'manage_ph_documents',
 				'delete_post'        => 'manage_ph_documents',
@@ -67,14 +74,14 @@ class Post_Type {
 				'delete_posts'       => 'manage_ph_documents',
 				'create_posts'       => 'manage_ph_documents',
 			),
-			'map_meta_cap'       => false,
-			'has_archive'        => false,
-			'hierarchical'       => false,
-			'menu_position'      => 20,
-			'menu_icon'          => 'dashicons-media-document',
-			'supports'           => array( 'title', 'revisions' ),
-			'taxonomies'         => array( 'ph_document_category' ),
-			'rest_base'          => 'documents',
+			'map_meta_cap'          => false,
+			'has_archive'           => false,
+			'hierarchical'          => false,
+			'menu_position'         => 20,
+			'menu_icon'             => 'dashicons-media-document',
+			'supports'              => array( 'title', 'revisions' ),
+			'taxonomies'            => array( 'ph_document_category' ),
+			'rest_base'             => 'documents',
 		);
 
 		register_post_type( 'ph_document', $args );
