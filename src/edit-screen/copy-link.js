@@ -14,15 +14,16 @@ export function initCopyLink() {
 	}
 
 	const originalText = btn.textContent;
-	const copiedText =
-		window.phDocumentManager?.copiedText || 'Copied!';
+	const copiedText = window.phDocumentManager?.copiedText || 'Copied!';
 
 	btn.addEventListener( 'click', () => {
 		if ( navigator.clipboard && navigator.clipboard.writeText ) {
 			navigator.clipboard
 				.writeText( url )
 				.then( () => showCopied( btn, copiedText, originalText ) )
-				.catch( () => fallbackCopy( url, btn, copiedText, originalText ) );
+				.catch( () =>
+					fallbackCopy( url, btn, copiedText, originalText )
+				);
 		} else {
 			fallbackCopy( url, btn, copiedText, originalText );
 		}

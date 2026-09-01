@@ -44,19 +44,19 @@ class Post_Type {
 		);
 
 		$args = array(
-			'labels'              => $labels,
-			'public'              => false,
-			'publicly_queryable'  => true,
-			'show_ui'             => true,
-			'show_in_menu'        => true,
-			'show_in_rest'        => true,
-			'query_var'           => true,
-			'rewrite'             => array(
+			'labels'             => $labels,
+			'public'             => false,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'show_in_rest'       => true,
+			'query_var'          => true,
+			'rewrite'            => array(
 				'slug'  => sanitize_title( $slug ),
 				'feeds' => false,
 			),
-			'capability_type'     => 'post',
-			'capabilities'        => array(
+			'capability_type'    => 'post',
+			'capabilities'       => array(
 				'edit_post'          => 'manage_ph_documents',
 				'read_post'          => 'manage_ph_documents',
 				'delete_post'        => 'manage_ph_documents',
@@ -67,14 +67,14 @@ class Post_Type {
 				'delete_posts'       => 'manage_ph_documents',
 				'create_posts'       => 'manage_ph_documents',
 			),
-			'map_meta_cap'        => false,
-			'has_archive'         => false,
-			'hierarchical'        => false,
-			'menu_position'       => 20,
-			'menu_icon'           => 'dashicons-media-document',
-			'supports'            => array( 'title', 'revisions' ),
-			'taxonomies'          => array( 'ph_document_category' ),
-			'rest_base'           => 'documents',
+			'map_meta_cap'       => false,
+			'has_archive'        => false,
+			'hierarchical'       => false,
+			'menu_position'      => 20,
+			'menu_icon'          => 'dashicons-media-document',
+			'supports'           => array( 'title', 'revisions' ),
+			'taxonomies'         => array( 'ph_document_category' ),
+			'rest_base'          => 'documents',
 		);
 
 		register_post_type( 'ph_document', $args );
@@ -99,15 +99,15 @@ class Post_Type {
 		);
 
 		$args = array(
-			'labels'            => $labels,
-			'public'            => false,
+			'labels'             => $labels,
+			'public'             => false,
 			'publicly_queryable' => false,
-			'show_ui'           => true,
-			'show_in_menu'      => true,
-			'show_in_rest'      => true,
-			'hierarchical'      => true,
-			'rewrite'           => false,
-			'show_admin_column' => false,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'show_in_rest'       => true,
+			'hierarchical'       => true,
+			'rewrite'            => false,
+			'show_admin_column'  => false,
 		);
 
 		register_taxonomy( 'ph_document_category', array( 'ph_document' ), $args );

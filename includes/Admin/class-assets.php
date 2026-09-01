@@ -48,7 +48,10 @@ class Assets {
 		$asset_file = PH_DOCUMENT_MANAGER_DIR . 'build/edit-screen.asset.php';
 		$asset      = file_exists( $asset_file )
 			? require $asset_file
-			: array( 'dependencies' => array(), 'version' => PH_DOCUMENT_MANAGER_VERSION );
+			: array(
+				'dependencies' => array(),
+				'version'      => PH_DOCUMENT_MANAGER_VERSION,
+			);
 
 		// Ensure wp-media is available for the wp.media frame.
 		$dependencies = array_unique( array_merge( $asset['dependencies'], array( 'wp-api-fetch' ) ) );
@@ -93,7 +96,10 @@ class Assets {
 		$asset_file = PH_DOCUMENT_MANAGER_DIR . 'build/list-table.asset.php';
 		$asset      = file_exists( $asset_file )
 			? require $asset_file
-			: array( 'dependencies' => array(), 'version' => PH_DOCUMENT_MANAGER_VERSION );
+			: array(
+				'dependencies' => array(),
+				'version'      => PH_DOCUMENT_MANAGER_VERSION,
+			);
 
 		if ( file_exists( PH_DOCUMENT_MANAGER_DIR . 'build/list-table.css' ) ) {
 			wp_enqueue_style(
