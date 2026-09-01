@@ -225,10 +225,10 @@ class Edit_Screen {
 			$new_file_id     = absint( $_POST['_ph_document_file_id'] );
 			$current_file_id = (int) get_post_meta( $post_id, '_ph_document_file_id', true );
 
-			if ( $new_file_id > 0 && $new_file_id !== $current_file_id ) {
+			if ( $new_file_id !== $current_file_id ) {
+				// Covers clearing the file too: push_file_revision() keeps the
+				// outgoing attachment in history before setting the new value.
 				Revisions::push_file_revision( $post_id, $new_file_id );
-			} elseif ( 0 === $new_file_id ) {
-				update_post_meta( $post_id, '_ph_document_file_id', 0 );
 			}
 		}
 

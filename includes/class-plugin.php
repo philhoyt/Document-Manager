@@ -26,6 +26,7 @@ class Plugin {
 		( new Settings() )->register();
 		( new List_Table() )->register();
 		( new Rest() )->register();
+		( new Validation() )->register();
 		( new Admin\Edit_Screen() )->register();
 		( new Admin\Assets() )->register();
 	}

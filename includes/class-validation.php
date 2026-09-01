@@ -26,33 +26,52 @@ class Validation {
 	const NONCE_FIELD = 'ph_document_meta_nonce';
 
 	/**
+	 * ID of the document held back at draft during this request, or 0 if none.
+	 *
+	 * @var int
+	 */
+	private $held_post_id = 0;
+
+	/**
 	 * Hook into WordPress.
 	 */
 	public function register() {
-		add_action( 'save_post_ph_document', array( $this, 'validate_on_save' ), 10, 3 );
+		add_filter( 'wp_insert_post_data', array( $this, 'hold_invalid_at_draft' ), 10, 2 );
+		add_filter( 'redirect_post_location', array( $this, 'filter_redirect_location' ), 10, 2 );
 		add_action( 'admin_post_ph_document_restore_revision', array( $this, 'handle_restore_revision' ) );
 	}
 
 	/**
-	 * Validate the document destination on save.
+	 * Hold a document at draft when it has no usable destination.
 	 *
-	 * @param int      $post_id Post ID.
-	 * @param \WP_Post $post    Post object.
-	 * @param bool     $update  Whether this is an update.
+	 * Runs on wp_insert_post_data, before the row is written, so an invalid
+	 * document is never published in the first place. An earlier version did
+	 * this from save_post and then redirected and exited, which truncated the
+	 * rest of wp_insert_post() — the generic save_post and wp_insert_post
+	 * actions other plugins hook — along with wp_set_post_lock() and sticky
+	 * handling in edit_post(). Correcting the status up front also avoids a
+	 * second write, so other plugins' save handlers fire once and no spurious
+	 * post revision is created.
+	 *
+	 * @param array $data    Sanitized post data headed for the database.
+	 * @param array $postarr Raw post data as submitted.
+	 * @return array
 	 */
-	public function validate_on_save( $post_id, $post, $update ) {
-		// Skip auto-saves, AJAX, REST, and non-publish/update actions.
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
+	public function hold_invalid_at_draft( $data, $postarr ) {
+		// Skip anything that is not a classic-editor save of a document.
+		if ( 'ph_document' !== $data['post_type'] ) {
+			return $data;
 		}
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			return;
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return $data;
 		}
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			return;
+			return $data;
 		}
-		if ( wp_is_post_revision( $post_id ) ) {
-			return;
+
+		// Only validate when publishing or scheduling.
+		if ( ! in_array( $data['post_status'], array( 'publish', 'future', 'pending' ), true ) ) {
+			return $data;
 		}
 
 		// Verify nonce.
@@ -60,13 +79,10 @@ class Validation {
 			! isset( $_POST[ self::NONCE_FIELD ] ) ||
 			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ self::NONCE_FIELD ] ) ), self::NONCE_ACTION )
 		) {
-			return;
+			return $data;
 		}
 
-		// Only validate when publishing or updating a published post.
-		if ( ! in_array( $post->post_status, array( 'publish', 'future', 'pending' ), true ) ) {
-			return;
-		}
+		$post_id = isset( $postarr['ID'] ) ? (int) $postarr['ID'] : 0;
 
 		$source_type = isset( $_POST['_ph_document_source_type'] )
 			? sanitize_text_field( wp_unslash( $_POST['_ph_document_source_type'] ) )
@@ -75,48 +91,49 @@ class Validation {
 		$error = $this->get_validation_error( $post_id, $source_type );
 
 		if ( ! $error ) {
-			return;
+			return $data;
 		}
 
-		// Force post back to draft without triggering this hook again.
-		remove_action( 'save_post_ph_document', array( $this, 'validate_on_save' ), 10 );
-		wp_update_post(
-			array(
-				'ID'          => $post_id,
-				'post_status' => 'draft',
-			)
-		);
-		add_action( 'save_post_ph_document', array( $this, 'validate_on_save' ), 10, 3 );
+		$data['post_status'] = 'draft';
+		$this->held_post_id  = $post_id;
 
 		set_transient( 'ph_doc_validation_error_' . $post_id, $error, 45 );
 
-		wp_safe_redirect(
-			add_query_arg(
-				array(
-					'post'   => $post_id,
-					'action' => 'edit',
-				),
-				admin_url( 'post.php' )
-			)
-		);
-		exit;
+		return $data;
+	}
+
+	/**
+	 * Strip core's success message when a document was held back at draft.
+	 *
+	 * Core would otherwise append "Post published." to the redirect, directly
+	 * contradicting the validation notice shown on the edit screen.
+	 *
+	 * @param string $location Redirect URL core chose.
+	 * @param int    $post_id  Post ID being redirected to.
+	 * @return string
+	 */
+	public function filter_redirect_location( $location, $post_id ) {
+		if ( ! $this->held_post_id || (int) $post_id !== $this->held_post_id ) {
+			return $location;
+		}
+
+		return remove_query_arg( 'message', $location );
 	}
 
 	/**
 	 * Handle the restore revision admin-post action.
 	 */
 	public function handle_restore_revision() {
-		if (
-			! isset( $_POST['ph_restore_nonce'] ) ||
-			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ph_restore_nonce'] ) ), 'ph_document_restore_revision' )
-		) {
-			wp_die( esc_html__( 'Security check failed.', 'ph-document-manager' ) );
+		$post_id        = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+		$revision_index = isset( $_GET['revision_index'] ) ? absint( $_GET['revision_index'] ) : 0;
+
+		check_admin_referer( 'ph_document_restore_revision_' . $post_id . '_' . $revision_index );
+
+		if ( ! $post_id || 'ph_document' !== get_post_type( $post_id ) ) {
+			wp_die( esc_html__( 'That document could not be found.', 'ph-document-manager' ) );
 		}
 
-		$post_id        = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
-		$revision_index = isset( $_POST['revision_index'] ) ? absint( $_POST['revision_index'] ) : 0;
-
-		if ( ! $post_id || ! current_user_can( 'manage_ph_documents' ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_die( esc_html__( 'You do not have permission to do this.', 'ph-document-manager' ) );
 		}
 
@@ -124,8 +141,8 @@ class Validation {
 
 		$redirect = add_query_arg(
 			array(
-				'post'           => $post_id,
-				'action'         => 'edit',
+				'post'            => $post_id,
+				'action'          => 'edit',
 				'ph_doc_restored' => $success ? '1' : '0',
 			),
 			admin_url( 'post.php' )
@@ -143,7 +160,7 @@ class Validation {
 	 * @return string|null
 	 */
 	private function get_validation_error( $post_id, $source_type ) {
-		// Nonce is verified in validate_on_save() before this method is called.
+		// Nonce is verified in hold_invalid_at_draft() before this method is called.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		if ( 'file' === $source_type ) {
 			$file_id = isset( $_POST['_ph_document_file_id'] )
