@@ -3,6 +3,8 @@
  * a file attachment and updating the hidden file ID input + display info.
  */
 
+import { speak } from '@wordpress/a11y';
+
 export function initMediaPicker() {
 	const selectBtn = document.getElementById( 'ph-doc-select-file' );
 	const fileIdInput = document.getElementById( 'ph-doc-file-id' );
@@ -23,11 +25,11 @@ export function initMediaPicker() {
 		if ( e.target && e.target.id === 'ph-doc-remove-file' ) {
 			fileIdInput.value = '0';
 			fileInfo.className = 'ph-doc-file-info';
+			const noFileText =
+				window.phDocumentManager?.noFileText || 'No file selected.';
 			fileInfo.innerHTML =
-				'<span class="ph-doc-no-file">' +
-				( window.phDocumentManager?.noFileText ||
-					'No file selected.' ) +
-				'</span>';
+				'<span class="ph-doc-no-file">' + noFileText + '</span>';
+			speak( noFileText, 'polite' );
 		}
 	} );
 
@@ -79,6 +81,16 @@ export function initMediaPicker() {
 
 			fileInfo.className = 'ph-doc-file-info has-file';
 			fileInfo.innerHTML = html;
+
+			// The info block is rewritten in place, which screen readers do not
+			// announce on their own.
+			speak(
+				( window.phDocumentManager?.fileSelectedText ||
+					'File selected:' ) +
+					' ' +
+					fileName,
+				'polite'
+			);
 		} );
 
 		frame.open();

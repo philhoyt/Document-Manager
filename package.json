@@ -28,6 +28,7 @@
         "uninstall.php"
     ],
     "devDependencies": {
+        "@wordpress/a11y": "^4.54.0",
         "@wordpress/env": "^10.39.0",
         "@wordpress/eslint-plugin": "^22.22.0",
         "@wordpress/scripts": "^30.0.0",

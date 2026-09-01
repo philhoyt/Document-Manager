@@ -9,6 +9,7 @@ namespace PH\DocumentManager\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
+use PH\DocumentManager\Meta;
 use PH\DocumentManager\Revisions;
 use PH\DocumentManager\Validation;
 
@@ -78,7 +79,7 @@ class Edit_Screen {
 			return;
 		}
 
-		$source_type = get_post_meta( $post->ID, '_ph_document_source_type', true ) ?: 'file';
+		$source_type = Meta::get_source_type( $post->ID );
 
 		wp_nonce_field( Validation::NONCE_ACTION, Validation::NONCE_FIELD );
 		?>
@@ -114,7 +115,7 @@ class Edit_Screen {
 	 * @param \WP_Post $post Current post object.
 	 */
 	public function render_file_meta_box( $post ) {
-		$source_type = get_post_meta( $post->ID, '_ph_document_source_type', true ) ?: 'file';
+		$source_type = Meta::get_source_type( $post->ID );
 		$file_id     = (int) get_post_meta( $post->ID, '_ph_document_file_id', true );
 		$file_name   = '';
 		$file_size   = 0;
@@ -142,7 +143,7 @@ class Edit_Screen {
 	 * @param \WP_Post $post Current post object.
 	 */
 	public function render_url_meta_box( $post ) {
-		$source_type = get_post_meta( $post->ID, '_ph_document_source_type', true ) ?: 'file';
+		$source_type = Meta::get_source_type( $post->ID );
 		$url         = get_post_meta( $post->ID, '_ph_document_url', true );
 
 		$wrap_style = ( 'file' === $source_type ) ? 'display:none;' : '';

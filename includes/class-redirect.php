@@ -69,7 +69,7 @@ class Redirect {
 			$file_id = (int) get_post_meta( $post_id, '_ph_document_file_id', true );
 			if ( $file_id > 0 ) {
 				$url = wp_get_attachment_url( $file_id );
-				return $url ?: false;
+				return $url ? $url : false;
 			}
 			return false;
 		}

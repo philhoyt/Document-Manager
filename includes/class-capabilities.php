@@ -26,18 +26,20 @@ class Capabilities {
 		$administrator = get_role( 'administrator' );
 		if ( $administrator ) {
 			$administrator->add_cap( 'manage_ph_documents' );
-			$administrator->add_cap( 'upload_ph_documents' );
 		}
 
 		$editor = get_role( 'editor' );
 		if ( $editor ) {
 			$editor->add_cap( 'manage_ph_documents' );
-			$editor->add_cap( 'upload_ph_documents' );
 		}
 	}
 
 	/**
 	 * Remove all plugin capabilities (called on uninstall).
+	 *
+	 * The upload_ph_documents capability is no longer granted — nothing ever
+	 * checked it — but it is still removed here so installs that predate that
+	 * change are cleaned up.
 	 */
 	public function remove_caps() {
 		$roles = array( 'administrator', 'editor', 'author', 'contributor', 'subscriber' );

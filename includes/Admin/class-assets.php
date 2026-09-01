@@ -53,15 +53,13 @@ class Assets {
 				'version'      => PH_DOCUMENT_MANAGER_VERSION,
 			);
 
-		// Ensure wp-media is available for the wp.media frame.
-		$dependencies = array_unique( array_merge( $asset['dependencies'], array( 'wp-api-fetch' ) ) );
-
+		// wp.media is provided by wp_enqueue_media(), not by a script dependency.
 		wp_enqueue_media();
 
 		wp_enqueue_script(
 			'ph-doc-edit-screen',
 			PH_DOCUMENT_MANAGER_URL . 'build/edit-screen.js',
-			$dependencies,
+			$asset['dependencies'],
 			$asset['version'],
 			true
 		);
@@ -70,12 +68,13 @@ class Assets {
 			'ph-doc-edit-screen',
 			'phDocumentManager',
 			array(
-				'mediaTitle'  => __( 'Select or Upload Document', 'ph-document-manager' ),
-				'mediaButton' => __( 'Use This File', 'ph-document-manager' ),
-				'copiedText'  => __( 'Copied!', 'ph-document-manager' ),
-				'copyText'    => __( 'Copy Link', 'ph-document-manager' ),
-				'removeText'  => __( 'Remove', 'ph-document-manager' ),
-				'noFileText'  => __( 'No file selected.', 'ph-document-manager' ),
+				'mediaTitle'       => __( 'Select or Upload Document', 'ph-document-manager' ),
+				'mediaButton'      => __( 'Use This File', 'ph-document-manager' ),
+				'copiedText'       => __( 'Copied!', 'ph-document-manager' ),
+				'copyText'         => __( 'Copy Link', 'ph-document-manager' ),
+				'removeText'       => __( 'Remove', 'ph-document-manager' ),
+				'noFileText'       => __( 'No file selected.', 'ph-document-manager' ),
+				'fileSelectedText' => __( 'File selected:', 'ph-document-manager' ),
 			)
 		);
 
