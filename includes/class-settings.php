@@ -17,9 +17,9 @@ class Settings {
 	/**
 	 * Option names.
 	 */
-	const OPTION_SLUG        = 'ph_document_manager_slug';
-	const OPTION_CAPABILITY  = 'ph_document_manager_capability';
-	const OPTION_FALLBACK    = 'ph_document_manager_fallback_url';
+	const OPTION_SLUG       = 'ph_document_manager_slug';
+	const OPTION_CAPABILITY = 'ph_document_manager_capability';
+	const OPTION_FALLBACK   = 'ph_document_manager_fallback_url';
 
 	/**
 	 * Hook into WordPress.

@@ -38,8 +38,12 @@ export function initMediaPicker() {
 		}
 
 		frame = window.wp.media( {
-			title:    window.phDocumentManager?.mediaTitle  || 'Select or Upload Document',
-			button:   { text: window.phDocumentManager?.mediaButton || 'Use This File' },
+			title:
+				window.phDocumentManager?.mediaTitle ||
+				'Select or Upload Document',
+			button: {
+				text: window.phDocumentManager?.mediaButton || 'Use This File',
+			},
 			multiple: false,
 		} );
 
@@ -56,16 +60,22 @@ export function initMediaPicker() {
 			const fileSize = attachment.filesizeHumanReadable || '';
 			const fileDate = attachment.dateFormatted || '';
 
-			let html = `<span class="ph-doc-file-name">${ escapeHtml( fileName ) }</span>`;
+			let html = `<span class="ph-doc-file-name">${ escapeHtml(
+				fileName
+			) }</span>`;
 			if ( fileSize ) {
-				html += ` <span class="ph-doc-file-size">${ escapeHtml( fileSize ) }</span>`;
+				html += ` <span class="ph-doc-file-size">${ escapeHtml(
+					fileSize
+				) }</span>`;
 			}
 			if ( fileDate ) {
-				html += ` <span class="ph-doc-file-date">${ escapeHtml( fileDate ) }</span>`;
+				html += ` <span class="ph-doc-file-date">${ escapeHtml(
+					fileDate
+				) }</span>`;
 			}
-			html += ` <button type="button" id="ph-doc-remove-file" class="button-link ph-doc-remove-link">${
-				escapeHtml( window.phDocumentManager?.removeText || 'Remove' )
-			}</button>`;
+			html += ` <button type="button" id="ph-doc-remove-file" class="button-link ph-doc-remove-link">${ escapeHtml(
+				window.phDocumentManager?.removeText || 'Remove'
+			) }</button>`;
 
 			fileInfo.className = 'ph-doc-file-info has-file';
 			fileInfo.innerHTML = html;
@@ -78,8 +88,8 @@ export function initMediaPicker() {
 /**
  * Minimal HTML escaping for dynamic content.
  *
- * @param {string} str
- * @return {string}
+ * @param {string} str Untrusted string to escape.
+ * @return {string} The string with HTML-significant characters escaped.
  */
 function escapeHtml( str ) {
 	return String( str )

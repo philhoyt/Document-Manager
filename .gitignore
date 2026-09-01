@@ -4,3 +4,10 @@ build/
 .DS_Store
 /docs
 *.zip
+.phpunit.result.cache
+
+# Claude Code — machine-specific session permissions, not shared
+.claude/settings.local.json
+
+# Claude Code — local feature planning notes, not part of the codebase
+plans/

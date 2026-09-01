@@ -1,0 +1,21 @@
+# Development tooling — never ship in the plugin zip
+.claude
+.git
+.gitignore
+.distignore
+.wp-env.json
+.phpcs.xml
+.eslintrc.js
+.stylelintrc.json
+phpstan.neon
+phpunit.xml
+composer.lock
+package.json
+package-lock.json
+webpack.config.js
+node_modules
+src
+tests
+docs
+plans
+*.zip
