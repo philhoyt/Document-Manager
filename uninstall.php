@@ -16,5 +16,7 @@ $capabilities = new PH\DocumentManager\Capabilities();
 $capabilities->remove_caps();
 
 delete_option( PH\DocumentManager\Settings::OPTION_SLUG );
-delete_option( PH\DocumentManager\Settings::OPTION_CAPABILITY );
+// Registered by versions before the option was removed as unused; delete any
+// value those installs left behind.
+delete_option( 'ph_document_manager_capability' );
 delete_option( PH\DocumentManager\Settings::OPTION_FALLBACK );

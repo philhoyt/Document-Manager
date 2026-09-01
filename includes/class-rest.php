@@ -116,7 +116,7 @@ class Rest {
 	 */
 	public function add_computed_fields( $response, $post, $request ) {
 		$data                = $response->get_data();
-		$data['source_type'] = get_post_meta( $post->ID, '_ph_document_source_type', true ) ?: 'file';
+		$data['source_type'] = Meta::get_source_type( $post->ID );
 		$response->set_data( $data );
 		return $response;
 	}

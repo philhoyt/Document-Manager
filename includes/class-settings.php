@@ -18,7 +18,6 @@ class Settings {
 	 * Option names.
 	 */
 	const OPTION_SLUG       = 'ph_document_manager_slug';
-	const OPTION_CAPABILITY = 'ph_document_manager_capability';
 	const OPTION_FALLBACK   = 'ph_document_manager_fallback_url';
 
 	/**
@@ -55,16 +54,6 @@ class Settings {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_title',
 				'default'           => 'documents',
-			)
-		);
-
-		register_setting(
-			'ph_document_manager',
-			self::OPTION_CAPABILITY,
-			array(
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-				'default'           => 'editor',
 			)
 		);
 

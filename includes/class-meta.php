@@ -137,4 +137,19 @@ class Meta {
 
 		return $sanitized;
 	}
+
+	/**
+	 * Get a document's source type, falling back to 'file'.
+	 *
+	 * The meta row is absent on documents created before a type was chosen, and
+	 * five callers were each applying their own default. Keep it in one place.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return string Either 'file' or 'url'.
+	 */
+	public static function get_source_type( $post_id ) {
+		$type = get_post_meta( $post_id, '_ph_document_source_type', true );
+
+		return ( 'url' === $type ) ? 'url' : 'file';
+	}
 }

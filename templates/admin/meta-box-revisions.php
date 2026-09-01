@@ -28,14 +28,23 @@ if ( empty( $revisions ) ) : ?>
 						<?php if ( isset( $revision['attachment_id'] ) ) : ?>
 							<?php
 							$attachment_url = wp_get_attachment_url( $revision['attachment_id'] );
-							$filename       = basename( get_attached_file( $revision['attachment_id'] ) );
+							$attached_file  = get_attached_file( $revision['attachment_id'] );
+							$filename       = $attached_file ? basename( $attached_file ) : '';
+
+							if ( '' !== $filename ) {
+								$label = $filename;
+							} elseif ( $attachment_url ) {
+								$label = __( '(unknown file)', 'ph-document-manager' );
+							} else {
+								$label = __( '(file missing)', 'ph-document-manager' );
+							}
 							?>
 							<?php if ( $attachment_url ) : ?>
 								<a href="<?php echo esc_url( $attachment_url ); ?>" target="_blank" rel="noopener noreferrer">
-									<?php echo esc_html( $filename ?: __( '(unknown file)', 'ph-document-manager' ) ); ?>
+									<?php echo esc_html( $label ); ?>
 								</a>
 							<?php else : ?>
-								<span class="ph-doc-missing"><?php echo esc_html( $filename ?: __( '(file missing)', 'ph-document-manager' ) ); ?></span>
+								<span class="ph-doc-missing"><?php echo esc_html( $label ); ?></span>
 							<?php endif; ?>
 						<?php elseif ( isset( $revision['url'] ) ) : ?>
 							<a href="<?php echo esc_url( $revision['url'] ); ?>" target="_blank" rel="noopener noreferrer">

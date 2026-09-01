@@ -2,6 +2,8 @@
  * Copy Link button — copies the document permalink to the clipboard.
  */
 
+import { speak } from '@wordpress/a11y';
+
 export function initCopyLink() {
 	const btn = document.getElementById( 'ph-doc-copy-link' );
 	if ( ! btn ) {
@@ -39,6 +41,8 @@ export function initCopyLink() {
  */
 function showCopied( btn, copiedText, originalText ) {
 	btn.textContent = copiedText;
+	// The label change is visual only; announce it for screen reader users.
+	speak( copiedText, 'polite' );
 	setTimeout( () => {
 		btn.textContent = originalText;
 	}, 2000 );

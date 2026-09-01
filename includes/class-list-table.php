@@ -23,6 +23,7 @@ class List_Table {
 		add_filter( 'manage_edit-ph_document_sortable_columns', array( $this, 'sortable_columns' ) );
 		add_action( 'restrict_manage_posts', array( $this, 'render_category_filter' ) );
 		add_filter( 'parse_query', array( $this, 'apply_category_filter' ) );
+		add_action( 'pre_get_posts', array( $this, 'apply_type_sort' ) );
 	}
 
 	/**
@@ -79,7 +80,7 @@ class List_Table {
 	 * @param int $post_id Post ID.
 	 */
 	private function render_type_column( $post_id ) {
-		$type = get_post_meta( $post_id, '_ph_document_source_type', true ) ?: 'file';
+		$type = Meta::get_source_type( $post_id );
 
 		if ( 'file' === $type ) {
 			printf(
@@ -100,7 +101,7 @@ class List_Table {
 	 * @param int $post_id Post ID.
 	 */
 	private function render_destination_column( $post_id ) {
-		$type = get_post_meta( $post_id, '_ph_document_source_type', true ) ?: 'file';
+		$type = Meta::get_source_type( $post_id );
 
 		if ( 'file' === $type ) {
 			$file_id = (int) get_post_meta( $post_id, '_ph_document_file_id', true );
@@ -111,7 +112,7 @@ class List_Table {
 					printf(
 						'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
 						esc_url( $url ),
-						esc_html( $filename ?: $url )
+						esc_html( '' !== $filename ? $filename : $url )
 					);
 				} else {
 					echo '<span class="description">' . esc_html__( '(file missing)', 'ph-document-manager' ) . '</span>';
@@ -175,6 +176,49 @@ class List_Table {
 	public function sortable_columns( $columns ) {
 		$columns['ph_type'] = 'ph_type';
 		return $columns;
+	}
+
+	/**
+	 * Translate the "Type" column sort into a real meta query.
+	 *
+	 * The sortable_columns() method advertises orderby=ph_type, but that is only
+	 * a column key — WP_Query has no idea what it means. Without this the header is
+	 * clickable and does nothing. The value lives in _ph_document_source_type.
+	 *
+	 * Documents saved before the source type was set have no meta row, so use
+	 * an existence-tolerant meta_query rather than a bare meta_key, otherwise
+	 * those rows drop out of the list entirely while sorting.
+	 *
+	 * @param \WP_Query $query Current query.
+	 */
+	public function apply_type_sort( $query ) {
+		if ( ! is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+
+		if ( 'ph_document' !== $query->get( 'post_type' ) ) {
+			return;
+		}
+
+		if ( 'ph_type' !== $query->get( 'orderby' ) ) {
+			return;
+		}
+
+		$query->set(
+			'meta_query',
+			array(
+				'relation'   => 'OR',
+				'ph_type'    => array(
+					'key'     => '_ph_document_source_type',
+					'compare' => 'EXISTS',
+				),
+				'ph_type_na' => array(
+					'key'     => '_ph_document_source_type',
+					'compare' => 'NOT EXISTS',
+				),
+			)
+		);
+		$query->set( 'orderby', 'ph_type' );
 	}
 
 	/**
