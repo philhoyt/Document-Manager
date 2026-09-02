@@ -4,7 +4,7 @@ Tags: documents, files, redirects, media, links
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,19 @@ Yes. Go to **Documents → Settings**. Rewrite rules flush automatically on save
 Administrators and editors by default. `manage_ph_documents` covers full CRUD, `upload_ph_documents` covers file upload. Both can be assigned to any role.
 
 == Changelog ==
+
+= 1.1.0 =
+* Add: Documents now appear in the block and classic editor link pickers. This was the plugin's advertised behaviour but never worked — the post type was registered private, and both link pickers only search public post types.
+* Add: Sorting the Documents list by the Type column. The column header was clickable but did nothing.
+* Add: Screen reader announcements when copying a document link and when selecting or removing a file.
+* Fix: Restoring a revision failed with a blank error page. The handler was never registered, so WordPress returned an empty 400 response.
+* Fix: Saving a document that had revision history silently discarded the change and redirected to the posts list.
+* Fix: Removing a file from a document dropped it from revision history instead of archiving it.
+* Fix: Publishing a document with no destination could cut the save short, skipping work other plugins do on save.
+* Change: The documents REST endpoint now requires an editing capability. Anonymous visitors could previously list every document and read its underlying file URL. Document permalinks are unaffected and can still be shared publicly.
+* Change: The unused upload_ph_documents capability is no longer granted. Nothing ever checked it. It is still removed on uninstall for existing sites.
+* Change: Lowered the minimum WordPress version to 6.3 to match readme.txt. Nothing in the plugin required 6.7.
+* Remove: The unused document capability setting, which had no field on the settings screen and was never read.
 
 = 1.0.0 =
 * Initial release.
