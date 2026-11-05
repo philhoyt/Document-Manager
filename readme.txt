@@ -4,7 +4,7 @@ Tags: documents, files, redirects, media, links
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ Yes. Go to **Documents → Settings**. Rewrite rules flush automatically on save
 Administrators and editors by default. `manage_ph_documents` covers full CRUD, `upload_ph_documents` covers file upload. Both can be assigned to any role.
 
 == Changelog ==
+
+= 1.1.1 =
+* Change: Tested up to WordPress 7.1.
 
 = 1.1.0 =
 * Add: Documents now appear in the block and classic editor link pickers. This was the plugin's advertised behaviour but never worked — the post type was registered private, and both link pickers only search public post types.
