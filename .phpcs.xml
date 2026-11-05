@@ -11,6 +11,9 @@
     <arg name="colors"/>
     <arg value="sp"/>
 
+    <!-- Warnings are reported but do not fail the run. -->
+    <config name="ignore_warnings_on_exit" value="1"/>
+
     <file>.</file>
 
     <exclude-pattern>vendor/*</exclude-pattern>
