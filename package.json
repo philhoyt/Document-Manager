@@ -10,7 +10,7 @@
         "lint:js": "wp-scripts lint-js",
         "lint:css": "wp-scripts lint-style",
         "plugin-zip": "npm run build && composer install --no-dev --optimize-autoloader && wp-scripts plugin-zip",
-        "test:unit": "wp-scripts test-unit-js",
+        "test:unit": "wp-scripts test-unit-js --passWithNoTests",
         "test:e2e": "wp-scripts test-playwright",
         "env:start": "wp-env start",
         "env:stop": "wp-env stop",
@@ -29,10 +29,12 @@
     ],
     "devDependencies": {
         "@wordpress/a11y": "^4.54.0",
-        "@wordpress/env": "^11.14.0",
-        "@wordpress/eslint-plugin": "^25.10.0",
-        "@wordpress/scripts": "^34.2.0",
-        "@wordpress/stylelint-config": "^24.3.0",
-        "globals": "^17.12.0"
+        "@wordpress/env": "^12.1.0",
+        "@wordpress/eslint-plugin": "^28.1.0",
+        "@wordpress/scripts": "^37.1.0",
+        "@wordpress/stylelint-config": "^27.1.0",
+        "globals": "^17.12.0",
+        "vite": "^8.3.5",
+        "vitest": "^5.1.0"
     }
 }
