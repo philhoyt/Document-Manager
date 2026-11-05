@@ -15,11 +15,6 @@ defined( 'ABSPATH' ) || exit;
 class Capabilities {
 
 	/**
-	 * Hook into WordPress. No runtime hooks needed — caps are set at activation.
-	 */
-	public function register() {}
-
-	/**
 	 * Assign default capabilities on plugin activation.
 	 */
 	public function assign_default_caps() {

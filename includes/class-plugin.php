@@ -19,7 +19,6 @@ class Plugin {
 	 */
 	public function register() {
 		( new Post_Type() )->register();
-		( new Capabilities() )->register();
 		( new Meta() )->register();
 		( new Redirect() )->register();
 		( new Sitemap() )->register();

@@ -30,7 +30,10 @@ $ph_document_manager_update_checker = PucFactory::buildUpdateChecker(
 	__FILE__,
 	'ph-document-manager'
 );
-$ph_document_manager_update_checker->getVcsApi()->enableReleaseAssets();
+$ph_document_manager_vcs_api        = $ph_document_manager_update_checker->getVcsApi();
+if ( method_exists( $ph_document_manager_vcs_api, 'enableReleaseAssets' ) ) {
+	$ph_document_manager_vcs_api->enableReleaseAssets();
+}
 
 // Activation / deactivation hooks.
 register_activation_hook( __FILE__, 'ph_document_manager_activate' );

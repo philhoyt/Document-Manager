@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 		type="hidden"
 		id="ph-doc-file-id"
 		name="_ph_document_file_id"
-		value="<?php echo esc_attr( $file_id ); ?>"
+		value="<?php echo esc_attr( (string) $file_id ); ?>"
 	/>
 
 	<div id="ph-doc-file-info" class="ph-doc-file-info <?php echo $file_id ? 'has-file' : ''; ?>">
