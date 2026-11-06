@@ -4,7 +4,7 @@ Tags: documents, files, redirects, media, links
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,10 @@ Administrators and editors by default. The `manage_ph_documents` capability can 
 Yes. Documents appear in the classic editor link dialog as well as the block editor link picker.
 
 == Changelog ==
+
+= 1.1.2 =
+* Fixed the update checker so it always installs the release zip, not whichever file GitHub lists first.
+* Rewrote the readme files in plain English.
 
 = 1.1.1 =
 * Tested up to WordPress 7.1.

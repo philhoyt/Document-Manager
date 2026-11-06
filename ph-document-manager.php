@@ -3,7 +3,7 @@
  * Plugin Name: Document Manager
  * Plugin URI:  https://github.com/philhoyt/Document-Manager
  * Description: Manage files and URLs as stable permalink redirects discoverable via the core link picker.
- * Version:     1.1.1
+ * Version:     1.1.2
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author:      Phil Hoyt
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PH_DOCUMENT_MANAGER_VERSION', '1.1.1' );
+define( 'PH_DOCUMENT_MANAGER_VERSION', '1.1.2' );
 define( 'PH_DOCUMENT_MANAGER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PH_DOCUMENT_MANAGER_URL', plugin_dir_url( __FILE__ ) );
 
